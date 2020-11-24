@@ -34,6 +34,11 @@ export function loadPlaces(filterBy) {
         dispatch(_setPlaces(places));
     }
 }
+export function reOrganizePlaces(places) {
+    return async (dispatch) => {
+        dispatch(_setPlaces(places));
+    }
+}
 export function removePlace(placeId) {
     return async (dispatch) => {
         mainService.remove(placeId)

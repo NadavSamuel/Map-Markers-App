@@ -6,6 +6,7 @@ export const mainService  =  {
     remove,
     getById,
     makeId,
+    saveReorgenizedPlaces
 }
 
 var defaultItems = [
@@ -14,7 +15,7 @@ var defaultItems = [
 ]
 
 const STORAGE_KEY = 'places'
-const gPlaces = _loadPlaces()
+let gPlaces = _loadPlaces()
 
 function query(filterBy) {
     let placesToReturn = gPlaces;
@@ -47,6 +48,11 @@ function save(placeToSave) {
     }
     storageService.saveToStorage(STORAGE_KEY, gPlaces)
     return Promise.resolve(placeToSave);
+}
+function saveReorgenizedPlaces(reOrgenizedPlaces){
+    gPlaces = Array.from(reOrgenizedPlaces)
+    storageService.saveToStorage(STORAGE_KEY, gPlaces)
+
 }
 
 function _loadPlaces() {

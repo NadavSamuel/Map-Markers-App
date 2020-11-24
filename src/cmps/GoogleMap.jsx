@@ -76,7 +76,7 @@ function _GoogleMap(props) {
       getEmptyState()
        dispatch(removePlace(placeToDeleteId))
        dispatch(loadPlaces)
-       dispatch(setNotification('success', `Successfully deleted ${currPlaceTitle}`,!!isExsictingNotification))
+       dispatch(setNotification('success', `Successfully deleted "${currPlaceTitle}"`,!!isExsictingNotification))
     } catch {
        dispatch(setNotification('err', `OOPS! something went wrong, could'nt delete ${currPlaceTitle}`))
     }

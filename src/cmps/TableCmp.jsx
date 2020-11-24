@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import {mainService} from '../services/mainService'
 import { PlaceModal } from '../cmps/PlaceModal'
-import { selectPlace } from '../actions/placeActions.js';
+import { selectPlace,reOrganizePlaces } from '../actions/placeActions.js';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,23 +13,25 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+
 
 
 export function TableCmp(props) {
     const dispatch = useDispatch()
-    const { filterBy, selectedPlace,places } = useSelector(state => state.placeReducer)
-    let [placesToShow,setPlacesToShow] = useState([])
+    const { filterBy, selectedPlace, places } = useSelector(state => state.placeReducer)
+    let [placesToShow, setPlacesToShow] = useState([])
     useEffect(() => {
         getPlacesToShow(filterBy)
-    }, [places,filterBy])
+    }, [places, filterBy])
 
-    async function getPlacesToShow(filterBy ) {
-        if(filterBy && filterBy.title){
+    async function getPlacesToShow(filterBy) {
+        if (filterBy && filterBy.title) {
             const { title } = filterBy
-            setPlacesToShow(placesToShow = places.filter(place => place.title.toLowerCase().includes(title.toLowerCase())) ) 
-        }else{
+            setPlacesToShow(placesToShow = places.filter(place => place.title.toLowerCase().includes(title.toLowerCase())))
+        } else {
             setPlacesToShow(placesToShow = places)
-        } 
+        }
     }
 
     function onSelectPlace(placeId = '') {
@@ -72,6 +75,23 @@ export function TableCmp(props) {
         }
     }))
     const classes = useStyles()
+    
+    function handleDragEnd(res){
+        if(!res.destination) return
+        const places = Array.from(placesToShow)
+        const [recordedPlace] = places.splice(res.source.index,1)
+        places.splice(res.destination.index,0,recordedPlace)
+        // setPlacesToShow(places)
+        try{
+            dispatch(reOrganizePlaces(places))
+            mainService.saveReorgenizedPlaces(places)
+        }
+        catch{
+            console.log('basa')
+        }
+
+
+    }
     if (!placesToShow.length) return <h1>No matching results</h1>
     else return (
         <React.Fragment>
@@ -86,22 +106,34 @@ export function TableCmp(props) {
                         </TableRow>
 
                     </TableHead>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        <Droppable droppableId="Place">
+                            {(provided) => (
+                                <TableBody {...provided.droppableProps} ref={provided.innerRef}>
+                                    {placesToShow.map((place,idx) => (
+                                        <Draggable key={place._id} draggableId={place._id} index={idx}>
+                                            {(provided) =>(
+                                                
+                                            
+                                            <StyledTableRow key={place._id} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                                                <StyledTableCell component="th" scope="row">
+                                                    {place.title || 'No title yet'}
+                                                </StyledTableCell>
+                                                <StyledTableCell align="left">{getLat(place)}</StyledTableCell>
+                                                <StyledTableCell align="left">{getLng(place)}</StyledTableCell>
+                                                <StyledTableCell align="left" className="description-slot column-layout">
 
-                    <TableBody>
-                        {placesToShow.map((place) => (
-                            <StyledTableRow key={place._id}>
-                                <StyledTableCell component="th" scope="row">
-                                    {place.title || 'No title yet'}
-                                </StyledTableCell>
-                                <StyledTableCell align="left">{getLat(place)}</StyledTableCell>
-                                <StyledTableCell align="left">{getLng(place)}</StyledTableCell>
-                                <StyledTableCell align="left" className="description-slot column-layout">
-
-                                    <button onClick={() => onSelectPlace(place._id)}>Show more</button>
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        ))}
-                    </TableBody>
+                                                    <button onClick={() => onSelectPlace(place._id)}>Show more</button>
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </TableBody>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
                 </Table>
             </TableContainer>
             {selectedPlace && <PlaceModal closeModal={onSelectPlace} place={selectedPlace} />}
