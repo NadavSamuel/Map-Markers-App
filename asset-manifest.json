@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/Map-Markers-App/static/css/main.f0394ee4.chunk.css",
-    "main.js": "/Map-Markers-App/static/js/main.2ae94792.chunk.js",
-    "main.js.map": "/Map-Markers-App/static/js/main.2ae94792.chunk.js.map",
+    "main.js": "/Map-Markers-App/static/js/main.f4e8fe3f.chunk.js",
+    "main.js.map": "/Map-Markers-App/static/js/main.f4e8fe3f.chunk.js.map",
     "runtime-main.js": "/Map-Markers-App/static/js/runtime-main.63b4e24d.js",
     "runtime-main.js.map": "/Map-Markers-App/static/js/runtime-main.63b4e24d.js.map",
-    "static/js/2.4efbd8bb.chunk.js": "/Map-Markers-App/static/js/2.4efbd8bb.chunk.js",
-    "static/js/2.4efbd8bb.chunk.js.map": "/Map-Markers-App/static/js/2.4efbd8bb.chunk.js.map",
+    "static/js/2.1621a881.chunk.js": "/Map-Markers-App/static/js/2.1621a881.chunk.js",
+    "static/js/2.1621a881.chunk.js.map": "/Map-Markers-App/static/js/2.1621a881.chunk.js.map",
     "index.html": "/Map-Markers-App/index.html",
-    "precache-manifest.1bc92ecfa4d07545a511127f67b53aad.js": "/Map-Markers-App/precache-manifest.1bc92ecfa4d07545a511127f67b53aad.js",
+    "precache-manifest.eec8fc61e854335e7958902ef6af80cd.js": "/Map-Markers-App/precache-manifest.eec8fc61e854335e7958902ef6af80cd.js",
     "service-worker.js": "/Map-Markers-App/service-worker.js",
     "static/css/main.f0394ee4.chunk.css.map": "/Map-Markers-App/static/css/main.f0394ee4.chunk.css.map",
-    "static/js/2.4efbd8bb.chunk.js.LICENSE": "/Map-Markers-App/static/js/2.4efbd8bb.chunk.js.LICENSE",
+    "static/js/2.1621a881.chunk.js.LICENSE": "/Map-Markers-App/static/js/2.1621a881.chunk.js.LICENSE",
     "static/media/global.scss": "/Map-Markers-App/static/media/Montserrat-Regular.ee653992.ttf",
     "static/media/logo.png": "/Map-Markers-App/static/media/logo.7802c6aa.png",
     "static/media/profile.jpg": "/Map-Markers-App/static/media/profile.36e27b4d.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.63b4e24d.js",
-    "static/js/2.4efbd8bb.chunk.js",
+    "static/js/2.1621a881.chunk.js",
     "static/css/main.f0394ee4.chunk.css",
-    "static/js/main.2ae94792.chunk.js"
+    "static/js/main.f4e8fe3f.chunk.js"
   ]
 }
