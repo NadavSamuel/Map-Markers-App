@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import {mainService} from '../services/mainService'
 import { PlaceModal } from '../cmps/PlaceModal'
-import { selectPlace,reOrganizePlaces } from '../actions/placeActions.js';
+import { selectPlace, reOrgenizePlaces } from '../actions/placeActions.js';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,6 +20,7 @@ export function TableCmp(props) {
     const dispatch = useDispatch()
     const { filterBy, selectedPlace, places } = useSelector(state => state.placeReducer)
     let [placesToShow, setPlacesToShow] = useState([])
+
     useEffect(() => {
         getPlacesToShow(filterBy)
     }, [places, filterBy])
@@ -30,7 +30,8 @@ export function TableCmp(props) {
             const { title } = filterBy
             setPlacesToShow(placesToShow = places.filter(place => place.title.toLowerCase().includes(title.toLowerCase())))
         } else {
-            setPlacesToShow(placesToShow = places)
+            console.log('places, ',places)
+            setPlacesToShow(places)
         }
     }
 
@@ -40,12 +41,12 @@ export function TableCmp(props) {
 
     const windowSize = useMediaQuery('(max-width:600px)');
     function getLat(place) {
-        if (!windowSize) return place.position.lat
-        else return place.position.lat.toFixed(2) + '...'
+        if (!windowSize) return place.position.lat;
+        else return place.position.lat.toFixed(2) + '...';
     }
     function getLng(place) {
-        if (!windowSize) return place.position.lng
-        else return place.position.lng.toFixed(2) + '...'
+        if (!windowSize) return place.position.lng;
+        else return place.position.lng.toFixed(2) + '...';
     }
 
     const StyledTableCell = withStyles((theme) => ({
@@ -75,22 +76,22 @@ export function TableCmp(props) {
         }
     }))
     const classes = useStyles()
-    
-    function handleDragEnd(res){
-        if(!res.destination) return
-        const places = Array.from(placesToShow)
-        const [recordedPlace] = places.splice(res.source.index,1)
-        places.splice(res.destination.index,0,recordedPlace)
-        // setPlacesToShow(places)
-        try{
-            dispatch(reOrganizePlaces(places))
-            mainService.saveReorgenizedPlaces(places)
-        }
-        catch{
-            console.log('basa')
-        }
 
-
+    function handleDragEnd(res) {
+        if (!res.destination) return
+        const currPlaces = Array.from(placesToShow);
+        const movedPlaceIdx = res.source.index;
+        const destinationIdx = res.destination.index;
+        const [recordedPlace] = currPlaces.splice(movedPlaceIdx, 1);
+        currPlaces.splice(destinationIdx, 0, recordedPlace);
+        try {
+            setPlacesToShow(currPlaces);
+            dispatch(reOrgenizePlaces(movedPlaceIdx,destinationIdx));
+            console.log('places after dnd, ',places);
+        }
+        catch {
+            console.log('basa');
+        }
     }
     if (!placesToShow.length) return <h1>No matching results</h1>
     else return (
@@ -110,22 +111,22 @@ export function TableCmp(props) {
                         <Droppable droppableId="Place">
                             {(provided) => (
                                 <TableBody {...provided.droppableProps} ref={provided.innerRef}>
-                                    {placesToShow.map((place,idx) => (
+                                    {placesToShow.map((place, idx) => (
                                         <Draggable key={place._id} draggableId={place._id} index={idx}>
-                                            {(provided) =>(
-                                                
-                                            
-                                            <StyledTableRow key={place._id} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                                                <StyledTableCell component="th" scope="row">
-                                                    {place.title || 'No title yet'}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="left">{getLat(place)}</StyledTableCell>
-                                                <StyledTableCell align="left">{getLng(place)}</StyledTableCell>
-                                                <StyledTableCell align="left" className="description-slot column-layout">
+                                            {(provided) => (
 
-                                                    <button onClick={() => onSelectPlace(place._id)}>Show more</button>
-                                                </StyledTableCell>
-                                            </StyledTableRow>
+
+                                                <StyledTableRow key={place._id} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                                                    <StyledTableCell component="th" scope="row">
+                                                        {place.title || 'No title yet'}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="left">{getLat(place)}</StyledTableCell>
+                                                    <StyledTableCell align="left">{getLng(place)}</StyledTableCell>
+                                                    <StyledTableCell align="left" className="description-slot column-layout">
+
+                                                        <button onClick={() => onSelectPlace(place._id)}>Show more</button>
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
                                             )}
                                         </Draggable>
                                     ))}

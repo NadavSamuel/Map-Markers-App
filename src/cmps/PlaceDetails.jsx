@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setInitialCenter,removePlace,loadPlaces} from '../actions/placeActions.js';
 import { setNotification} from '../actions/notificationActions'
 import {googleResturantsService} from '../services/googleResturantsService'
+import { Link } from 'react-router-dom'
 
 export function _PlaceDetails(props) {
     const dispatch = useDispatch()
@@ -32,11 +33,6 @@ export function _PlaceDetails(props) {
             dispatch(setNotification('err', `OOPS! something went wrong, could'nt delete ${currPlaceTitle}`))
         }
     }
-    function onShowResturants(){
-        const {lat,lng} = place.position
-        // googleResturantsService.getResturantsFromGoogle()
-        googleResturantsService.getResturantsFromGoogle(lat,lng)
-    }
     return (
         <React.Fragment>
             <div className="place-details-container">
@@ -55,12 +51,13 @@ export function _PlaceDetails(props) {
                     <h3><span>Langtitude: </span>{place.position.lng}</h3>
                     <h3>Description:</h3>
                     <p>{place.description || 'No description yet'}</p>
+                    <Link to={`/resturants/${place._id}`} >See resturants around!</Link>
+                    
                 </div>
                 <div className="action-btns flex space-between">
                     <button onClick={toggleIsEdit}>Edit </button>
                     <button onClick={onSetInitialCenter}>Set as initial center </button>
                     <button onClick={onDeletePlace}>Delete </button>
-                    <button onClick={onShowResturants}>Resturants </button>
                 </div>
             </div>
         </React.Fragment>
